@@ -59,7 +59,7 @@ public class BallController : MonoBehaviour
         ballRigidbody.AddTorque(new Vector3(1.0f, 1.0f, 1.0f) * ballRigidbody.velocity.magnitude, ForceMode.VelocityChange);
     }
 
-	private void RestartBall()
+	public void RestartBall()
 	{
 		transform.position = startPos;
 		transform.rotation = startRot;
