@@ -126,6 +126,7 @@ public class GameManager : MonoBehaviour
     {
         Score = 0;
         Timer = 30f;
+        ballController.RestartBall();
     }
 
     public void Play()
