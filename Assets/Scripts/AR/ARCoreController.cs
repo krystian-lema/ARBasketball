@@ -8,6 +8,8 @@ public class ARCoreController : MonoBehaviour
     [SerializeField] private Camera arCamera;
     [SerializeField] private GameObject[] visualizationObjects;
     [SerializeField] private GameObject gameplay;
+    [SerializeField] private ARGameplayCameraScaler arGameplayCameraScaler;
+    [SerializeField] private float scale = 1f;
     [SerializeField] private Button startARButton;
 
     private bool surfaceEnabled;
@@ -93,6 +95,8 @@ public class ARCoreController : MonoBehaviour
         gameplay.transform.position = currentHit.Pose.position;
         gameplay.transform.rotation = currentHit.Pose.rotation;
 
+        arGameplayCameraScaler.gameObject.SetActive(true);
+        arGameplayCameraScaler.Init(arCamera, anchor.gameObject, scale);
         Visualize(false);
         startARButton.gameObject.SetActive(false);
     }
