@@ -58,13 +58,20 @@ public class BallController : MonoBehaviour
     private void OnMouseUp()
     {
         var throwVector = Input.mousePosition - throwStartPos;
+	    Debug.LogFormat("IriginThrowVector: {0}", throwVector);
+	    var normalizedThrowVector = throwVector.normalized;
+	    Debug.LogFormat("NormalizedThrowVector: {0}", normalizedThrowVector);
         var throwTime = (DateTime.Now - throwStartTime).TotalMilliseconds;
         var ballSpeed = (throwVector.magnitude / (float)throwTime) * 10f;
-	    var normalizedBallSpeed =
-		    NormalizeBallSpeed(ballSpeed, minInputSpeed, maxInputSpeed, minThrowSpeed, maxThrowSpeed);
+	    var scaledBallSpeed =
+		    ScaleValue(ballSpeed, minInputSpeed, maxInputSpeed, minThrowSpeed, maxThrowSpeed);
+	    
+	    var scaledHorizontalValue = ScaleValue(normalizedThrowVector.x, -1f, 1f, -0.25f, 0.25f);
+	    var scaledThrowVector = new Vector3(scaledHorizontalValue, normalizedThrowVector.y, normalizedThrowVector.z).normalized;
+	    Debug.LogFormat("ScaledThrowVector: {0}", scaledThrowVector);
 
-        ThrowBall(throwVector.normalized + transform.forward / 2, normalizedBallSpeed);
-	    Debug.LogFormat("BallOriginSpeed: {0}", normalizedBallSpeed);
+        ThrowBall(scaledThrowVector + transform.forward / 2, scaledBallSpeed);
+	    Debug.LogFormat("BallOriginSpeed: {0}", scaledBallSpeed);
     }
 
     private void ThrowBall(Vector3 throwDirection, float throwSpeed)
@@ -84,11 +91,10 @@ public class BallController : MonoBehaviour
 		ballRigidbody.isKinematic = true;
 	}
 
-	// Cast to normalized values (easier to throw)
-	private float NormalizeBallSpeed(float ballSpeed, float originMin, float originMax,
+	private float ScaleValue(float ballSpeedoriginValue, float originMin, float originMax,
 		float normalMin, float normalMax)
 	{
-		var clampedBallSpeed = Mathf.Clamp(ballSpeed, originMin, originMax);
-		return normalMin + (clampedBallSpeed - originMin) / (originMax - originMin) * (normalMax - normalMin);
+		var clampedOriginValue = Mathf.Clamp(ballSpeedoriginValue, originMin, originMax);
+		return normalMin + (clampedOriginValue - originMin) / (originMax - originMin) * (normalMax - normalMin);
 	}
 }
