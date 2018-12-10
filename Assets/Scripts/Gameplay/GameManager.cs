@@ -4,11 +4,14 @@ using UnityEngine.Assertions;
 
 public class GameManager : MonoBehaviour
 {
+    [SerializeField] private InsertScorePanel insertScorePanel;
+    
     [SerializeField] private MenuController menuController;
     [SerializeField] private HudController hudController;
     
     [SerializeField] private ScoreTrigger scoreTrigger;
     [SerializeField] private BallController ballController;
+    
 
     private bool playing;
     public bool Playing
@@ -20,6 +23,7 @@ public class GameManager : MonoBehaviour
             menuController.gameObject.SetActive(!playing);
             menuController.SetHighScore(HighScore);
             hudController.gameObject.SetActive(playing);
+            ballController.CanThrow = playing;
         }
     }
 
@@ -58,6 +62,7 @@ public class GameManager : MonoBehaviour
 
     private void Awake()
     {
+        Assert.IsNotNull(insertScorePanel);
         Assert.IsNotNull(menuController);
         Assert.IsNotNull(hudController);
         Assert.IsNotNull(scoreTrigger);
@@ -140,5 +145,10 @@ public class GameManager : MonoBehaviour
         ballController.RestartBall();
         HighScore = Math.Max(Score, HighScore);
         Playing = false;
+        if (Score > 0)
+        {
+            insertScorePanel.gameObject.SetActive(true);
+            insertScorePanel.Init(Score);
+        }
     }
 }

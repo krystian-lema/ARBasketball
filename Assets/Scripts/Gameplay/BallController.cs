@@ -15,7 +15,8 @@ public class BallController : MonoBehaviour
 
     private Vector3 throwStartPos;
     private DateTime throwStartTime;
-
+	
+	public bool CanThrow { get; set; }
 
     private void Awake()
     {
@@ -57,8 +58,13 @@ public class BallController : MonoBehaviour
     
     private void OnMouseUp()
     {
+	    if (!CanThrow)
+	    {
+		    return;
+	    }
+	    
         var throwVector = Input.mousePosition - throwStartPos;
-	    Debug.LogFormat("IriginThrowVector: {0}", throwVector);
+	    Debug.LogFormat("OriginThrowVector: {0}", throwVector);
 	    var normalizedThrowVector = throwVector.normalized;
 	    Debug.LogFormat("NormalizedThrowVector: {0}", normalizedThrowVector);
         var throwTime = (DateTime.Now - throwStartTime).TotalMilliseconds;
